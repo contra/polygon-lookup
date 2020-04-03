@@ -139,27 +139,32 @@ PolygonLookup.prototype.loadFeatureCollection = function loadFeatureCollection( 
     bboxes.push(bbox);
   }
 
-  function indexFeature( poly ){
+  function indexFeature( poly, index ){
     if( poly.geometry &&
         poly.geometry.coordinates[ 0 ] !== undefined &&
         poly.geometry.coordinates[ 0 ].length > 0){
       switch( poly.geometry.type ){
         case 'Polygon':
-          indexPolygon( poly );
+          indexPolygon({
+            type: 'Feature',
+            properties: poly.properties,
+            originalIndex: index,
+            geometry: poly.geometry
+          });
           break;
 
         case 'MultiPolygon':
           var childPolys = poly.geometry.coordinates;
           for( var ind = 0; ind < childPolys.length; ind++ ){
-            var childPoly = {
+            indexPolygon({
               type: 'Feature',
               properties: poly.properties,
+              originalIndex: index,
               geometry: {
                 type: 'Polygon',
                 coordinates: childPolys[ ind ]
               }
-            };
-            indexPolygon( childPoly );
+            });
           }
           break;
       }

@@ -52,10 +52,28 @@ tape( 'PolygonLookup.loadFeatureCollection() sets properties.', function ( test 
     ]
   };
 
+  var expected = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        originalIndex: 0,
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[
+            [ 0, 1 ],
+            [ 2, 1 ],
+          ]]
+        }
+      }
+    ]
+  };
+
   var lookup = new PolygonLookup();
   lookup.loadFeatureCollection( collection );
   test.ok( lookup.rtree instanceof rbush, 'Sets `rtree`.' );
-  test.deepEqual( lookup.polygons, collection.features, 'Sets `polygons`.' );
+  test.deepEqual( lookup.polygons, expected.features, 'Sets `polygons`.' );
   test.end();
 });
 
